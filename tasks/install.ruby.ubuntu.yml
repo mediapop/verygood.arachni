@@ -1,0 +1,25 @@
+---
+# Ubuntu doesn't have ruby 2.0 by default which arachni requires.
+- shell: ruby --version
+  register: ruby_version
+
+- name: Install Ruby 2
+  apt: name="{{item}}"
+  with_items:
+  - ruby2.0
+  - ruby2.0-dev
+  when: ruby_version.stdout < "ruby 2.0
+
+- name: Symlink exists for Ruby 2.0
+  file:
+    src=/usr/bin/ruby2.0
+    dest=/usr/local/bin/ruby
+    state=link
+  when: ruby_version.stdout < "ruby 2.0
+
+- name: Symlink exists for Ruby Gems 2.0
+  file:
+    src=/usr/bin/gem2.0
+    dest=/usr/local/bin/gem
+    state=link
+  when: ruby_version.stdout < "ruby 2.0

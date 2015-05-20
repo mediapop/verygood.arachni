@@ -1,0 +1,16 @@
+---
+- debug: msg="{{ansible_os_family}}"
+
+- include: "install.ruby.ubuntu.yml"
+  when: ansible_distribution == "Ubuntu"
+
+- name: "Install build dependencies for arachni"
+  apt: name={{item}}
+  with_items:
+  - build-essential
+  - curl
+  - libcurl3
+  - libcurl4-openssl-dev
+  when: ansible_distribution == "Ubuntu"
+
+- gem: name=arachni
